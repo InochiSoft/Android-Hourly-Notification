@@ -30,8 +30,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="com.laregrage.testservice.helper.action.START_SERVICE" />
-                <action android:name="com.laregrage.testservice.helper.action.CLOSE_NOTIFY" />
+                <action android:name="com.laregrage.testservice.action.CREATE_DAILY" />
+                <action android:name="com.laregrage.testservice.action.CLOSE_NOTIFY" />
             </intent-filter>
         </receiver>
 
@@ -43,8 +43,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="com.laregrage.testservice.helper.action.START_SERVICE" />
-                <action android:name="com.laregrage.testservice.helper.action.CLOSE_NOTIFY" />
+                <action android:name="com.laregrage.testservice.action.CREATE_DAILY" />
+                <action android:name="com.laregrage.testservice.action.CLOSE_NOTIFY" />
             </intent-filter>
         </service>
     </application>

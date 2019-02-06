@@ -2,7 +2,7 @@ package com.laregrage.testservice.helper;
 
 public final class Constants {
     public static class Default {
-        public static final String APP = "com.laregrage.testservice.helper";
+        public static final String APP = "com.laregrage.testservice";
         private static final int REQUEST = 1000;
     }
 
