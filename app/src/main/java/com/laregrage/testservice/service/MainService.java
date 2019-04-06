@@ -87,7 +87,13 @@ public class MainService extends Service {
         if (action == null) action = "";
 
         if (!action.isEmpty()){
-            NotifItem notifItem = (NotifItem) intent.getSerializableExtra(Constants.Setting.NOTIF_ITEM);
+            Bundle args = intent.getExtras();
+            assert args != null;
+            NotifItem notifItem = new NotifItem();
+
+            //notifItem =  args.getInt(Constants.Setting.NOTIF_ITEM);
+            //2019-04-06 Change object NotifItem variable to int
+            int notifId = args.getInt(Constants.Setting.NOTIF_ITEM);
 
             switch (action){
                 case "com.htc.intent.action.QUICKBOOT_POWERON":
@@ -97,12 +103,16 @@ public class MainService extends Service {
                     createDailyAlarm();
                     break;
                 case Constants.Action.SHOW_NOTIFY:
-                    if (notifItem != null)
-                    TestNotification.notify(this, notifItem);
+                    //if (notifItem != null)
+                    //2019-04-06 Change notifItem variable to notifId
+                    if (notifId > 0)
+                    TestNotification.notify(this, notifId);
                     break;
                 case Constants.Action.CLOSE_NOTIFY:
-                    if (notifItem != null)
-                    TestNotification.cancel(this, notifItem);
+                    //if (notifItem != null)
+                    //2019-04-06 Change notifItem variable to notifId
+                    if (notifId > 0)
+                    TestNotification.cancel(this, notifId);
                     break;
             }
 
@@ -121,18 +131,24 @@ public class MainService extends Service {
         Intent intent = new Intent(this, TestReceiver.class);
         intent.setAction(Constants.Action.SHOW_NOTIFY);
 
+        //2019-04-06 Remove object NotifItem
+        /*
         NotifItem notifItem = new NotifItem();
         notifItem.setId(hour);
         notifItem.setTicker("Test Notification");
         notifItem.setTitle("Test Notification");
         notifItem.setMessage("Test Notification for " + String.valueOf(hour));
+        */
+        Bundle args = new Bundle();
+        args.putInt(Constants.Setting.NOTIF_ITEM, 10002);
 
-        intent.putExtra(Constants.Setting.NOTIF_ITEM, notifItem);
+        intent.putExtra(Constants.Setting.NOTIF_ITEM, 10002);
+        intent.putExtras(args);
 
         alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_HOUR, alarmIntent);
+                60 * 1000, alarmIntent);
 
         ComponentName receiver = new ComponentName(this, TestReceiver.class);
         PackageManager pm = getPackageManager();

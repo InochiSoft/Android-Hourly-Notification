@@ -20,6 +20,7 @@ public final class Constants {
         public static final class Type {
             public static final int BOOT = Default.REQUEST + 1;
             public static final int WAKE_LOCK = Default.REQUEST + 2;
+            public static final int VIBRATE = Default.REQUEST + 3;
         }
     }
 

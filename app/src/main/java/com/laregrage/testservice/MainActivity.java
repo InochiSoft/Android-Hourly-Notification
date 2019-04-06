@@ -48,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WAKE_LOCK},
                     Constants.Permission.Type.WAKE_LOCK);
+        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.VIBRATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.VIBRATE},
+                    Constants.Permission.Type.VIBRATE);
         } else {
             runAutoStartCustom();
             runService();
