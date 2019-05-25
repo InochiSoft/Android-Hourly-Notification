@@ -17,27 +17,22 @@ import com.laregrage.testservice.item.NotifItem;
 import com.laregrage.testservice.service.TestReceiver;
 
 public class TestNotification {
-    public static void notify(final Context context, int notifId) {
+    public static void notify(final Context context, NotifItem notifItem) {
         final Resources res = context.getResources();
 
         final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.example_picture);
 
-        NotifItem notifItem = new NotifItem();
-        notifItem.setId(notifId);
-        notifItem.setTicker("Test Notification");
-        notifItem.setTitle("Test Notification");
-        notifItem.setMessage("Test Notification");
-
+        final int id = notifItem.getId();
         final String ticker = notifItem.getTicker();
         final String title = notifItem.getTitle();
         final String text = notifItem.getMessage();
 
         Intent intentReceiver = new Intent(context, TestReceiver.class);
-        intentReceiver.putExtra(Constants.Setting.NOTIF_ITEM, notifId);
+        intentReceiver.putExtra(Constants.Setting.NOTIF_ID, id);
         intentReceiver.setAction(Constants.Action.CLOSE_NOTIFY);
 
         PendingIntent closeNotifyIntent = PendingIntent.getBroadcast(context,
-                notifId, intentReceiver, PendingIntent.FLAG_UPDATE_CURRENT);
+                id, intentReceiver, PendingIntent.FLAG_UPDATE_CURRENT);
 
         long[] pattern = null;
         NotificationManager notificationManager = createNotificationChannel(context);
@@ -56,7 +51,7 @@ public class TestNotification {
                 .addAction(android.R.drawable.ic_menu_close_clear_cancel, "Close", closeNotifyIntent)
         ;
 
-        notificationManager.notify(notifId, builder.build());
+        notificationManager.notify(id, builder.build());
     }
 
     private static NotificationManager createNotificationChannel(Context context) {
@@ -79,8 +74,8 @@ public class TestNotification {
         return notificationManager;
     }
 
-    public static void cancel(final Context context, int notifId) {
+    public static void cancel(final Context context, int id) {
         final NotificationManager nm = createNotificationChannel(context);
-        nm.cancel(notifId);
+        nm.cancel(id);
     }
 }

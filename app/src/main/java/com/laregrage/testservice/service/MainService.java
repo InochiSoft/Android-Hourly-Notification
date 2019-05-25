@@ -89,11 +89,19 @@ public class MainService extends Service {
         if (!action.isEmpty()){
             Bundle args = intent.getExtras();
             assert args != null;
-            NotifItem notifItem = new NotifItem();
+            NotifItem notifItem = null;
 
-            //notifItem =  args.getInt(Constants.Setting.NOTIF_ITEM);
-            //2019-04-06 Change object NotifItem variable to int
-            int notifId = args.getInt(Constants.Setting.NOTIF_ITEM);
+            int notifId = args.getInt(Constants.Setting.NOTIF_ID);
+            String notifTitle = args.getString(Constants.Setting.NOTIF_TITLE);
+            String notifText = args.getString(Constants.Setting.NOTIF_TEXT);
+
+            if (notifId > 0){
+                notifItem = new NotifItem();
+                notifItem.setId(notifId);
+                notifItem.setTicker(notifTitle);
+                notifItem.setTitle(notifTitle);
+                notifItem.setMessage(notifText);
+            }
 
             switch (action){
                 case "com.htc.intent.action.QUICKBOOT_POWERON":
@@ -103,14 +111,10 @@ public class MainService extends Service {
                     createDailyAlarm();
                     break;
                 case Constants.Action.SHOW_NOTIFY:
-                    //if (notifItem != null)
-                    //2019-04-06 Change notifItem variable to notifId
                     if (notifId > 0)
-                    TestNotification.notify(this, notifId);
+                    TestNotification.notify(this, notifItem);
                     break;
                 case Constants.Action.CLOSE_NOTIFY:
-                    //if (notifItem != null)
-                    //2019-04-06 Change notifItem variable to notifId
                     if (notifId > 0)
                     TestNotification.cancel(this, notifId);
                     break;
@@ -131,18 +135,11 @@ public class MainService extends Service {
         Intent intent = new Intent(this, TestReceiver.class);
         intent.setAction(Constants.Action.SHOW_NOTIFY);
 
-        //2019-04-06 Remove object NotifItem
-        /*
-        NotifItem notifItem = new NotifItem();
-        notifItem.setId(hour);
-        notifItem.setTicker("Test Notification");
-        notifItem.setTitle("Test Notification");
-        notifItem.setMessage("Test Notification for " + String.valueOf(hour));
-        */
         Bundle args = new Bundle();
-        args.putInt(Constants.Setting.NOTIF_ITEM, 10002);
+        args.putInt(Constants.Setting.NOTIF_ID, 10002);
+        args.putString(Constants.Setting.NOTIF_TITLE, "Test Notification");
+        args.putString(Constants.Setting.NOTIF_TEXT, "Test Notification for " + hour);
 
-        intent.putExtra(Constants.Setting.NOTIF_ITEM, 10002);
         intent.putExtras(args);
 
         alarmIntent = PendingIntent.getBroadcast(this, 0, intent, 0);

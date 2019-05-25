@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.laregrage.testservice.helper.BundleSettings;
 import com.laregrage.testservice.helper.Constants;
 import com.laregrage.testservice.item.NotifItem;
 import com.laregrage.testservice.service.TestReceiver;
@@ -20,10 +21,13 @@ import com.laregrage.testservice.util.TestNotification;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
+    private BundleSettings bundleSettings;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bundleSettings = new BundleSettings(this);
 
         setPermission();
     }
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED},
-                    Constants.Permission.Type.BOOT);
+                    Constants.Permission.Type.RECEIVE_BOOT_COMPLETED);
         } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WAKE_LOCK},
@@ -53,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.VIBRATE},
                     Constants.Permission.Type.VIBRATE);
         } else {
-            runAutoStartCustom();
+            if (bundleSettings.getBootPremission() == 0){
+                runAutoStartCustom();
+            }
             runService();
             runFirstNotification();
         }
@@ -80,6 +86,8 @@ public class MainActivity extends AppCompatActivity {
         for (Intent intent : AUTO_START_INTENTS){
             if (getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null) {
                 startActivity(intent);
+
+                bundleSettings.setBootPremission(1);
                 break;
             }
         }
@@ -99,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         notifItem.setId(hour);
         notifItem.setTicker("Test Notification");
         notifItem.setTitle("Test Notification");
-        notifItem.setMessage("Test Notification for " + String.valueOf(hour));
+        notifItem.setMessage("Test Notification for " + hour);
 
         TestNotification.notify(this, notifItem);
     }
